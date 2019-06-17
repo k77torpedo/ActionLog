@@ -5,9 +5,9 @@ Records actions or events in games with their respective data into a continuous 
 
 ## When to use it:
 * You want to log certain action or events for display.
-* You want different systems to access logged actions without relying on events or callbacks. 
+* You want different systems to access actions or events without relying on C#-events or callbacks. 
 
-The latter is especially important in games since sometimes we don't want to calculate everything in one frame but rather just _log_ that something happened to then later let other systems simply look it up and process it. A good example would be if a player takes a hit from a monster: Different Effects or Skills might want to react to _"Player is taking a hit"_ but doing all that on the same frame might lead to lag or stutter in which case the `ActionLog` can help you.
+In our games we sometimes don't want to calculate everything in one frame but rather just _log_ that something happened to then later let other systems simply look it up and process it. A good example would be if a player takes a hit from a monster: Different Effects or Skills might want to react to _"Player is taking 5 damage"_ but doing all that on the same frame might lead to lag or stutter in which case the `ActionLog` might be able to help you.
 
 ## How to ...?
 
@@ -55,16 +55,69 @@ This will add the action to the current frame.
         byte[] actionData = new byte[] { 100 };
         actionLog.AddAction(firstFrame, actionId, actionData);
 ```
+This will add the action to the specified frame.
 
 #### Add an action to the current frame or create a new frame automatically
 ```
         ulong frame = 9999L;
         int actionId = 2;
         byte[] actionData = new byte[] { 100 };
-        actionLog.AddAction(frame, actionId, actionData);
+        actionLog.Add(frame, actionId, actionData);
 ```
+If the specified frame is the current frame the action will be added to it, else a new frame with the action will automatically be added.
+
+This is the preferred way of adding to the `ActionLog`.
 
 ### Read logged actions
 
+#### Method 1
+```
+        int actionId = 2:
+        actionLog.AddAction(actionId, new byte[] { 22 });
+        actionLog.AddAction(actionId, new byte[] { 44 });
+        actionLog.AddAction(actionId, new byte[] { 66 });
+        
+        RingBufferByteArray buffer = actionLog.GetActionsBuffer(actionId);
+        for (int i = 0; i < buffer.Count; i++) {
+            Debug.Log("We found: " + buffer[i][0]);
+        }
+```
+By receiving a shallow copy of the `RingBufferByteArray` we can simply iterate through its collection to receive all actions that have been added.
+
+#### Method 2
+```
+        int actionId = 2:
+        actionLog.AddAction(actionId, new byte[] { 22 });
+        actionLog.AddAction(actionId, new byte[] { 44 });
+        actionLog.AddAction(actionId, new byte[] { 66 });
+
+        int[] index = actionLog.GetActionsIndex(actionId);
+        for (int i = 0; i < actionLog.Actions[index[0], index[1]].Count; i++) {
+            Debug.Log("We found: " + actionLog.Actions[index[0], index[1]][i][0]);
+        }
+```
+By receiving the multidimensional index of where the `RingBufferByteArray` is located inside the `ActionLog.Actions` we can directly access it and do not need to produce any shallow copies of it.
 
 
+
+
+# MIT License
+Copyright (c) 2019 k77torpedo
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
