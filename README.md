@@ -19,6 +19,17 @@ Organizing data this way keeps performance relatively fast and prevents common p
 ## How to ...?
 
 ### Create a new log
+```
+        int frameCapacity = 10;
+        int actionCapacity = 5;
+        int actionBufferCapacity = 10;
+
+        ActionLog log = new ActionLog(frameCapacity, actionCapacity, actionBufferCapacity);
+```
+Explanation: 
+* With a _frameCapacity_ of 10 we can keep track of up to 10 frames before the oldest one will be recycled. 
+* With an _actionCapacity_ of 5 we can log 5 different actions or events for every frame. 
+* With an _actionBufferCapacity_ of 10 we can make 10 entries for each(!!!) action before the oldest on will be recycled.
 
 ### Add a new frame to the log
 
