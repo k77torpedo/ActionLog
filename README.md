@@ -8,16 +8,20 @@ Records actions or events in games into a continuous 'Log' on a frame-by-frame b
 
 In our games we sometimes don't want to calculate everything in one frame but rather just _log_ that something has happened to then later let other systems simply look it up and process it. A good example would be if a player takes a hit from a monster: Different Effects or Skills might want to react to _"Player is taking 5 damage"_ but doing all that on the same frame might lead to lag or stutter in which case the `ActionLog` might be able to help you.
 
+## 3) How it works
+The `ActionLog` keeps a RingBuffer for the frames you want to add. Once the RingBuffer is full the oldest entry will be overwritten. The `ActionLog` also keeps RingBuffers for the actions you want to log which will also overwrite the oldest entry once the actions' RingBuffer is full. See image below:
+![Overview](https://raw.githubusercontent.com/k77torpedo/ActionLog/master/Documentation/ActionLog_Overview.png)
 
-## 3) How to ...?
 
-### 3.1) Create a new ActionLog
+## 4) How to ...?
+
+### 4.1) Create a new ActionLog
 ```
         int frameCapacity = 10;
         int actionCapacity = 5;
         int actionBufferCapacity = 10;
 
-        ActionLogFloat actionLog = new ActionLogFloat(frameCapacity, actionCapacity, actionBufferCapacity);
+        ActionLogInt actionLog = new ActionLogInt(frameCapacity, actionCapacity, actionBufferCapacity);
 ```
 Explanation: 
 * With a _frameCapacity_ of 10 we can keep track of up to 10 frames before the oldest one will be recycled. 
@@ -27,7 +31,7 @@ Explanation:
 Note: The _actionCapacity_ also dictates the _actionIds_ for the actions you want to add. An _actionCapacity_ of 7 will give you the _actionIds_ 0, 1, 2, 3, 4, 5 and 6. An _actionCapacity_ of 4 will give you the _actionIds_ 0, 1, 2 and 3.
 
 
-### 3.2) Add a new frame to the ActionLog
+### 4.2) Add a new frame to the ActionLog
 ```
         ulong newFrame = 9999L;
         actionLog.AddFrame(newFrame);
@@ -35,16 +39,16 @@ Note: The _actionCapacity_ also dictates the _actionIds_ for the actions you wan
 This will add a new frame to the ActionLog.
 
 
-### 3.3) Add an action to the current frame
+### 4.3) Add an action to the current frame
 ```
         int actionId = 2;
-        float actionData = 15f;
+        int actionData = 15;
         actionLog.AddAction(actionId, actionData);
 ```
 This will add the action to the current frame.
 
 
-### 3.4) Add an action retrospectively to a previous frame
+### 4.4) Add an action retrospectively to a previous frame
 ```
         ulong firstFrame = 9998L;
         actionLog.AddFrame(firstFrame);
@@ -53,17 +57,17 @@ This will add the action to the current frame.
         actionLog.AddFrame(secondFrame);
         
         int actionId = 2;
-        float actionData = 15f;
+        int actionData = 15;
         actionLog.AddAction(firstFrame, actionId, actionData);
 ```
 This will add the action to the specified frame.
 
 
-### 3.5) Add an action to the current frame or create a new frame automatically
+### 4.5) Add an action to the current frame or create a new frame automatically
 ```
         ulong frame = 9999L;
         int actionId = 2;
-        float actionData = 15f;
+        int actionData = 15;
         actionLog.Add(frame, actionId, actionData);
 ```
 If the specified frame is the current frame the action will be added to it, else a new frame with the action will automatically be added.
@@ -71,37 +75,37 @@ If the specified frame is the current frame the action will be added to it, else
 This is the preferred way of adding actions to the `ActionLogFloat`!
 
 
-### 3.6) Read logged actions (Method 1)
+### 4.6) Read logged actions (Method 1)
 ```
         int actionId = 2:
-        actionLog.AddAction(actionId, 22f);
-        actionLog.AddAction(actionId, 44f);
-        actionLog.AddAction(actionId, 66f);
+        actionLog.AddAction(actionId, 22);
+        actionLog.AddAction(actionId, 44);
+        actionLog.AddAction(actionId, 66);
         
-        RingBufferFloat buffer = actionLog.GetActionsBuffer(actionId);
+        RingBufferInt buffer = actionLog.GetActionsBuffer(actionId);
         for (int i = 0; i < buffer.Count; i++) {
             Debug.Log("Recorded action data: " + buffer[i]);
         }
 ```
-By receiving a shallow copy of the `RingBufferFloat` we can simply iterate through its collection to receive all actions that have been added.
+By receiving a shallow copy of the `RingBufferInt` we can simply iterate through its collection to receive all actions that have been added.
 
 
-#### 3.7) Read logged actions (Method 2)
+#### 4.7) Read logged actions (Method 2)
 ```
         int actionId = 2:
-        actionLog.AddAction(actionId, 22f);
-        actionLog.AddAction(actionId, 44f);
-        actionLog.AddAction(actionId, 66f);
+        actionLog.AddAction(actionId, 22);
+        actionLog.AddAction(actionId, 44);
+        actionLog.AddAction(actionId, 66);
 
         int[] index = actionLog.GetActionsIndex(actionId);
         for (int i = 0; i < actionLog.Actions[index[0], index[1]].Count; i++) {
             Debug.Log("Recorded action data: " + actionLog.Actions[index[0], index[1]][i]);
         }
 ```
-By receiving the multidimensional index of where the `RingBufferFloat` is located inside the `ActionLogFloat.Actions` we can directly access it and do not need to produce any shallow copies of it.
+By receiving the multidimensional index of where the `RingBufferInt` is located inside the `ActionLogInt.Actions` we can directly access it and do not need to produce any shallow copies of it.
 
 
-## 4) Closure
+## 5) Closure
 Currently supported types:
 * `ActionLogByte`
 * `ActionLogByteArray`
@@ -111,8 +115,10 @@ Currently supported types:
 * `ActionLogIntArray`
 * `ActionLogFloat`
 * `ActionLogFloatArray`
+* `ActionLogString`
+* `ActionLogStringArray`
 
-The classes provided have no generic implementation. You are encouraged to change the code to your needs.
+The classes provided have no generic implementation as they have been code-generated by a personal project of mine to be open-sourced here. I'm sorry for the inconvenience. You are encouraged to change the code to your needs.
 
 
 # MIT License
