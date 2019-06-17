@@ -19,11 +19,11 @@ The `ActionLog` keeps a RingBuffer of your frames. Once the RingBuffer is full t
 
 ### 4.1) Create a new ActionLog
 ```
-        int frameCapacity = 7;
-        int actionCapacity = 4;
-        int actionBufferCapacity = 5;
+int frameCapacity = 7;
+int actionCapacity = 4;
+int actionBufferCapacity = 5;
 
-        ActionLogInt actionLog = new ActionLogInt(frameCapacity, actionCapacity, actionBufferCapacity);
+ActionLogInt actionLog = new ActionLogInt(frameCapacity, actionCapacity, actionBufferCapacity);
 ```
 Explanation: 
 * With a _frameCapacity_ of 7 we can keep track of up to 7 frames before the oldest one will be overwritten. 
@@ -35,42 +35,42 @@ Note: The _actionCapacity_ also dictates the _actionIds_ for the actions you wan
 
 ### 4.2) Add a new frame to the ActionLog
 ```
-        ulong newFrame = 9999L;
-        actionLog.AddFrame(newFrame);
+ulong newFrame = 9999L;
+actionLog.AddFrame(newFrame);
 ```
 This will add a new frame to the ActionLog.
 
 
 ### 4.3) Add an action to the current frame
 ```
-        int actionId = 2;
-        int actionData = 15;
-        actionLog.AddAction(actionId, actionData);
+int actionId = 2;
+int actionData = 15;
+actionLog.AddAction(actionId, actionData);
 ```
 This will add the action to the current frame.
 
 
 ### 4.4) Add an action to a previous frame
 ```
-        ulong firstFrame = 9998L;
-        actionLog.AddFrame(firstFrame);
-        
-        ulong secondFrame = 9999L;
-        actionLog.AddFrame(secondFrame);
-        
-        int actionId = 2;
-        int actionData = 15;
-        actionLog.AddAction(firstFrame, actionId, actionData);
+ulong firstFrame = 9998L;
+actionLog.AddFrame(firstFrame);
+
+ulong secondFrame = 9999L;
+actionLog.AddFrame(secondFrame);
+
+int actionId = 2;
+int actionData = 15;
+actionLog.AddAction(firstFrame, actionId, actionData);
 ```
 This will add the action to the specified frame.
 
 
 ### 4.5) Add an action to the current frame or create a new frame automatically
 ```
-        ulong frame = 9999L;
-        int actionId = 2;
-        int actionData = 15;
-        actionLog.Add(frame, actionId, actionData);
+ulong frame = 9999L;
+int actionId = 2;
+int actionData = 15;
+actionLog.Add(frame, actionId, actionData);
 ```
 If the specified frame is the current frame the action will be added to it, else a new frame with the action will automatically be added.
 
@@ -79,30 +79,30 @@ This is the easiest and preferred way of adding actions to the `ActionLog`!
 
 ### 4.6) Read logged actions (Method 1)
 ```
-        int actionId = 2:
-        actionLog.AddAction(actionId, 22);
-        actionLog.AddAction(actionId, 44);
-        actionLog.AddAction(actionId, 66);
-        
-        RingBufferInt buffer = actionLog.GetActionsBuffer(actionId);
-        for (int i = 0; i < buffer.Count; i++) {
-            Debug.Log("Recorded action data: " + buffer[i]);
-        }
+int actionId = 2:
+actionLog.AddAction(actionId, 22);
+actionLog.AddAction(actionId, 44);
+actionLog.AddAction(actionId, 66);
+
+RingBufferInt buffer = actionLog.GetActionsBuffer(actionId);
+for (int i = 0; i < buffer.Count; i++) {
+    Debug.Log("Recorded action data: " + buffer[i]);
+}
 ```
 By receiving a shallow copy of the `RingBufferInt` we can simply iterate through its collection to receive all actions that have been added.
 
 
 ### 4.7) Read logged actions (Method 2)
 ```
-        int actionId = 2:
-        actionLog.AddAction(actionId, 22);
-        actionLog.AddAction(actionId, 44);
-        actionLog.AddAction(actionId, 66);
+int actionId = 2:
+actionLog.AddAction(actionId, 22);
+actionLog.AddAction(actionId, 44);
+actionLog.AddAction(actionId, 66);
 
-        int[] index = actionLog.GetActionsIndex(actionId);
-        for (int i = 0; i < actionLog.Actions[index[0], index[1]].Count; i++) {
-            Debug.Log("Recorded action data: " + actionLog.Actions[index[0], index[1]][i]);
-        }
+int[] index = actionLog.GetActionsIndex(actionId);
+for (int i = 0; i < actionLog.Actions[index[0], index[1]].Count; i++) {
+    Debug.Log("Recorded action data: " + actionLog.Actions[index[0], index[1]][i]);
+}
 ```
 By receiving the multidimensional index of where the `RingBufferInt` is located inside the `ActionLogInt.Actions` we can directly access it and do not need to produce any shallow copies of it.
 
