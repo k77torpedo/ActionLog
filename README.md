@@ -17,7 +17,7 @@ In our games we sometimes don't want to calculate everything in one frame but ra
         int actionCapacity = 5;
         int actionBufferCapacity = 10;
 
-        ActionLog actionLog = new ActionLog(frameCapacity, actionCapacity, actionBufferCapacity);
+        ActionLogFloat actionLog = new ActionLogFloat(frameCapacity, actionCapacity, actionBufferCapacity);
 ```
 Explanation: 
 * With a _frameCapacity_ of 10 we can keep track of up to 10 frames before the oldest one will be recycled. 
@@ -38,7 +38,7 @@ This will add a new frame to the ActionLog.
 #### Add an action to the current frame
 ```
         int actionId = 2;
-        byte[] actionData = new byte[] { 100 };
+        float actionData = 15f;
         actionLog.AddAction(actionId, actionData);
 ```
 This will add the action to the current frame.
@@ -52,7 +52,7 @@ This will add the action to the current frame.
         actionLog.AddFrame(secondFrame);
         
         int actionId = 2;
-        byte[] actionData = new byte[] { 100 };
+        float actionData = 15f;
         actionLog.AddAction(firstFrame, actionId, actionData);
 ```
 This will add the action to the specified frame.
@@ -61,44 +61,53 @@ This will add the action to the specified frame.
 ```
         ulong frame = 9999L;
         int actionId = 2;
-        byte[] actionData = new byte[] { 100 };
+        float actionData = 15f;
         actionLog.Add(frame, actionId, actionData);
 ```
 If the specified frame is the current frame the action will be added to it, else a new frame with the action will automatically be added.
 
-This is the preferred way of adding to the `ActionLog`.
+This is the preferred way of adding to the `ActionLogFloat`.
 
 ### Read logged actions
 
 #### Method 1
 ```
         int actionId = 2:
-        actionLog.AddAction(actionId, new byte[] { 22 });
-        actionLog.AddAction(actionId, new byte[] { 44 });
-        actionLog.AddAction(actionId, new byte[] { 66 });
+        actionLog.AddAction(actionId, 22f);
+        actionLog.AddAction(actionId, 44f);
+        actionLog.AddAction(actionId, 66f);
         
-        RingBufferByteArray buffer = actionLog.GetActionsBuffer(actionId);
+        RingBufferFloat buffer = actionLog.GetActionsBuffer(actionId);
         for (int i = 0; i < buffer.Count; i++) {
-            Debug.Log("We found: " + buffer[i][0]);
+            Debug.Log("Recorded action data: " + buffer[i]);
         }
 ```
-By receiving a shallow copy of the `RingBufferByteArray` we can simply iterate through its collection to receive all actions that have been added.
+By receiving a shallow copy of the `RingBufferFloat` we can simply iterate through its collection to receive all actions that have been added.
 
 #### Method 2
 ```
         int actionId = 2:
-        actionLog.AddAction(actionId, new byte[] { 22 });
-        actionLog.AddAction(actionId, new byte[] { 44 });
-        actionLog.AddAction(actionId, new byte[] { 66 });
+        actionLog.AddAction(actionId, 22f);
+        actionLog.AddAction(actionId, 44f);
+        actionLog.AddAction(actionId, 66f);
 
         int[] index = actionLog.GetActionsIndex(actionId);
         for (int i = 0; i < actionLog.Actions[index[0], index[1]].Count; i++) {
-            Debug.Log("We found: " + actionLog.Actions[index[0], index[1]][i][0]);
+            Debug.Log("Recorded action data: " + actionLog.Actions[index[0], index[1]][i]);
         }
 ```
-By receiving the multidimensional index of where the `RingBufferByteArray` is located inside the `ActionLog.Actions` we can directly access it and do not need to produce any shallow copies of it.
+By receiving the multidimensional index of where the `RingBufferFloat` is located inside the `ActionLogFloat.Actions` we can directly access it and do not need to produce any shallow copies of it.
 
-
+## Closure
+Currently supported types:
+* `ActionLogByte`
+* `ActionLogByteArray`
+* `ActionLogShort`
+* `ActionLogShortArray`
+* `ActionLogInt`
+* `ActionLogIntArray`
+* `ActionLogFloat`
+* `ActionLogFloatArray`
 
 
 # MIT License
