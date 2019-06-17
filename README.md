@@ -1,4 +1,4 @@
-# ActionLog
+# ActionLog (Beta Release)
 
 ## What is it?
 Records actions or events in games with their respective data into a continuous 'Log' on a frame-by-frame basis using RingBuffers only.
