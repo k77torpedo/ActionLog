@@ -77,7 +77,7 @@ If the specified frame is the current frame the action will be added to it, else
 This is the easiest and preferred way of adding actions to the `ActionLog`!
 
 
-### 4.6) Read logged actions (Method 1)
+### 4.6) Retrieve logged actions (Method 1)
 ```
 int actionId = 2:
 actionLog.AddAction(actionId, 22);
@@ -92,7 +92,7 @@ for (int i = 0; i < buffer.Count; i++) {
 By receiving a shallow copy of the `RingBufferInt` we can simply iterate through its collection to receive all actions that have been added.
 
 
-### 4.7) Read logged actions (Method 2)
+### 4.7) Retrieve logged actions (Method 2)
 ```
 int actionId = 2:
 actionLog.AddAction(actionId, 22);
