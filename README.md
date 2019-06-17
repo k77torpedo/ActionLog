@@ -17,61 +17,52 @@ The latter is especially important in games since sometimes we don't want to cal
         int actionCapacity = 5;
         int actionBufferCapacity = 10;
 
-        ActionLog log = new ActionLog(frameCapacity, actionCapacity, actionBufferCapacity);
+        ActionLog actionLog = new ActionLog(frameCapacity, actionCapacity, actionBufferCapacity);
 ```
 Explanation: 
 * With a _frameCapacity_ of 10 we can keep track of up to 10 frames before the oldest one will be recycled. 
 * With an _actionCapacity_ of 5 we can log 5 different actions or events for every frame. 
 * With an _actionBufferCapacity_ of 10 we can make 10 entries for each(!!!) action before the oldest on will be recycled.
 
+Note: The _actionCapacity_ also dictates the _actionIds_ for the actions you want to add. An _actionCapacity_ of 7 will give you the _actionIds_ 0, 1, 2, 3, 4, 5 and 6. An _actionCapacity_ of 4 will give you the _actionIds_ 0, 1, 2 and 3.
+
 ### Add a new frame to the ActionLog
 ```
-        int frameCapacity = 10;
-        int actionCapacity = 5;
-        int actionBufferCapacity = 10;
-        ActionLog log = new ActionLog(frameCapacity, actionCapacity, actionBufferCapacity);
-
         ulong newFrame = 9999L;
-        log.AddFrame(newFrame);
+        actionLog.AddFrame(newFrame);
 ```
-With this a new frame will be added to the ActionLog.
+This will add a new frame to the ActionLog.
 
 ### Add an action to a frame
 
 #### Add an action to the current frame
 ```
-        int frameCapacity = 10;
-        int actionCapacity = 5;
-        int actionBufferCapacity = 10;
-        ActionLog log = new ActionLog(frameCapacity, actionCapacity, actionBufferCapacity);
-        ulong newFrame = 9999L;
-        log.AddFrame(newFrame);
-        
         int actionId = 2;
         byte[] actionData = new byte[] { 100 };
-        log.AddAction(actionId, actionData);
+        actionLog.AddAction(actionId, actionData);
 ```
-
+This will add the action to the current frame.
 
 #### Add an action retrospectively to a previous frame
 ```
-        int frameCapacity = 10;
-        int actionCapacity = 5;
-        int actionBufferCapacity = 10;
-        ActionLog log = new ActionLog(frameCapacity, actionCapacity, actionBufferCapacity);
-        
         ulong firstFrame = 9998L;
-        log.AddFrame(firstFrame);
+        actionLog.AddFrame(firstFrame);
         
         ulong secondFrame = 9999L;
-        log.AddFrame(secondFrame);
+        actionLog.AddFrame(secondFrame);
         
         int actionId = 2;
         byte[] actionData = new byte[] { 100 };
-        log.AddAction(firstFrame, actionId, actionData);
+        actionLog.AddAction(firstFrame, actionId, actionData);
 ```
 
-
+#### Add an action to the current frame or create a new frame automatically
+```
+        ulong frame = 9999L;
+        int actionId = 2;
+        byte[] actionData = new byte[] { 100 };
+        actionLog.AddAction(frame, actionId, actionData);
+```
 
 ### Read logged actions
 
