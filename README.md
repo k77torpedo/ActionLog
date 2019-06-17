@@ -1,17 +1,17 @@
-# ActionLog (Beta Release)
-
-## What is it?
+## 1) What is it?
 Records actions or events in games into a continuous 'Log' on a frame-by-frame basis using RingBuffers only.
 
-## When to use it:
+
+## 2) When to use it:
 * You want to log certain actions or events for display.
 * You want different systems to access actions or events without relying on C#-events or callbacks. 
 
 In our games we sometimes don't want to calculate everything in one frame but rather just _log_ that something has happened to then later let other systems simply look it up and process it. A good example would be if a player takes a hit from a monster: Different Effects or Skills might want to react to _"Player is taking 5 damage"_ but doing all that on the same frame might lead to lag or stutter in which case the `ActionLog` might be able to help you.
 
-## How to ...?
 
-### Create a new ActionLog
+## 3) How to ...?
+
+### 3.1) Create a new ActionLog
 ```
         int frameCapacity = 10;
         int actionCapacity = 5;
@@ -26,16 +26,16 @@ Explanation:
 
 Note: The _actionCapacity_ also dictates the _actionIds_ for the actions you want to add. An _actionCapacity_ of 7 will give you the _actionIds_ 0, 1, 2, 3, 4, 5 and 6. An _actionCapacity_ of 4 will give you the _actionIds_ 0, 1, 2 and 3.
 
-### Add a new frame to the ActionLog
+
+### 3.2) Add a new frame to the ActionLog
 ```
         ulong newFrame = 9999L;
         actionLog.AddFrame(newFrame);
 ```
 This will add a new frame to the ActionLog.
 
-### Add an action to a frame
 
-#### Add an action to the current frame
+### 3.3) Add an action to the current frame
 ```
         int actionId = 2;
         float actionData = 15f;
@@ -43,7 +43,8 @@ This will add a new frame to the ActionLog.
 ```
 This will add the action to the current frame.
 
-#### Add an action retrospectively to a previous frame
+
+### 3.4) Add an action retrospectively to a previous frame
 ```
         ulong firstFrame = 9998L;
         actionLog.AddFrame(firstFrame);
@@ -57,7 +58,8 @@ This will add the action to the current frame.
 ```
 This will add the action to the specified frame.
 
-#### Add an action to the current frame or create a new frame automatically
+
+### 3.5) Add an action to the current frame or create a new frame automatically
 ```
         ulong frame = 9999L;
         int actionId = 2;
@@ -68,9 +70,8 @@ If the specified frame is the current frame the action will be added to it, else
 
 This is the preferred way of adding to the `ActionLogFloat`.
 
-### Read logged actions
 
-#### Method 1
+### 3.6) Read logged actions (Method 1)
 ```
         int actionId = 2:
         actionLog.AddAction(actionId, 22f);
@@ -84,7 +85,8 @@ This is the preferred way of adding to the `ActionLogFloat`.
 ```
 By receiving a shallow copy of the `RingBufferFloat` we can simply iterate through its collection to receive all actions that have been added.
 
-#### Method 2
+
+#### 3.7) Read logged actions (Method 2)
 ```
         int actionId = 2:
         actionLog.AddAction(actionId, 22f);
@@ -98,7 +100,8 @@ By receiving a shallow copy of the `RingBufferFloat` we can simply iterate throu
 ```
 By receiving the multidimensional index of where the `RingBufferFloat` is located inside the `ActionLogFloat.Actions` we can directly access it and do not need to produce any shallow copies of it.
 
-## Closure
+
+## 4) Closure
 Currently supported types:
 * `ActionLogByte`
 * `ActionLogByteArray`
@@ -108,6 +111,8 @@ Currently supported types:
 * `ActionLogIntArray`
 * `ActionLogFloat`
 * `ActionLogFloatArray`
+
+The classes provided have no generic implementation. You are encouraged to change the code to your needs.
 
 
 # MIT License
