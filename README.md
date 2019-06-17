@@ -3,6 +3,7 @@ Records actions or events in games into a continuous 'Log' on a frame-by-frame b
 
 
 ## 2) When to use it:
+* You want to log data on a frame-by-frame basis.
 * You want to log certain actions or events for display.
 * You want different systems to access actions or events without relying on C#-events or callbacks. 
 
