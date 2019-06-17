@@ -19,16 +19,16 @@ The `ActionLog` keeps a RingBuffer of your frames. Once the RingBuffer is full t
 
 ### 4.1) Create a new ActionLog
 ```
-        int frameCapacity = 10;
-        int actionCapacity = 5;
-        int actionBufferCapacity = 10;
+        int frameCapacity = 7;
+        int actionCapacity = 4;
+        int actionBufferCapacity = 5;
 
         ActionLogInt actionLog = new ActionLogInt(frameCapacity, actionCapacity, actionBufferCapacity);
 ```
 Explanation: 
-* With a _frameCapacity_ of 10 we can keep track of up to 10 frames before the oldest one will be overwritten. 
-* With an _actionCapacity_ of 5 we can log 5 different actions or events for every frame. 
-* With an _actionBufferCapacity_ of 10 we can make 10 entries for each(!!!) action before the oldest on will be overwritten.
+* With a _frameCapacity_ of 10 we can keep track of up to 7 frames before the oldest one will be overwritten. 
+* With an _actionCapacity_ of 4 we can log 4 different actions or events for every frame. 
+* With an _actionBufferCapacity_ of 5 we can make 5 entries for each(!!!) action before the oldest on will be overwritten.
 
 Note: The _actionCapacity_ also dictates the _actionIds_ for the actions you want to add. An _actionCapacity_ of 7 will give you the _actionIds_ 0, 1, 2, 3, 4, 5 and 6. An _actionCapacity_ of 4 will give you the _actionIds_ 0, 1, 2 and 3.
 
