@@ -4,10 +4,10 @@
 Records actions or events in games with their respective data into a continuous 'Log' on a frame-by-frame basis using RingBuffers only.
 
 ## When to use it:
-* You want to log certain action or events for display.
+* You want to log certain actions or events for display.
 * You want different systems to access actions or events without relying on C#-events or callbacks. 
 
-In our games we sometimes don't want to calculate everything in one frame but rather just _log_ that something happened to then later let other systems simply look it up and process it. A good example would be if a player takes a hit from a monster: Different Effects or Skills might want to react to _"Player is taking 5 damage"_ but doing all that on the same frame might lead to lag or stutter in which case the `ActionLog` might be able to help you.
+In our games we sometimes don't want to calculate everything in one frame but rather just _log_ that something has happened to then later let other systems simply look it up and process it. A good example would be if a player takes a hit from a monster: Different Effects or Skills might want to react to _"Player is taking 5 damage"_ but doing all that on the same frame might lead to lag or stutter in which case the `ActionLog` might be able to help you.
 
 ## How to ...?
 
