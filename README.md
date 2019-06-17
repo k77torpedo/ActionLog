@@ -6,10 +6,12 @@ Records actions or events in games into a continuous 'Log' on a frame-by-frame b
 * You want to log certain actions or events for display.
 * You want different systems to access actions or events without relying on C#-events or callbacks. 
 
-In our games we sometimes don't want to calculate everything in one frame but rather just _log_ that something has happened to then later let other systems simply look it up and process it. A good example would be if a player takes a hit from a monster: Different Effects or Skills might want to react to _"Player is taking 5 damage"_ but doing all that on the same frame might lead to lag or stutter in which case the `ActionLog` might be able to help you.
+Reason: In our games we sometimes don't want to calculate everything in one frame but rather just _log_ that something has happened to then later let other systems simply look it up and process it. A good example would be if a player takes a hit from a monster: different Effects or Skills might want to react to _"Player is taking 5 damage"_ but doing all that on the same frame might lead to lag or stutter in which case the `ActionLog` might be able to help you.
 
 ## 3) How it works
-The `ActionLog` keeps a RingBuffer for the frames you want to add. Once the RingBuffer is full the oldest entry will be overwritten. The `ActionLog` also keeps RingBuffers for the actions you want to log which will also overwrite the oldest entry once the actions' RingBuffer is full. See image below:
+The `ActionLog` keeps a RingBuffer of your frames. Once the RingBuffer is full the oldest entry will be overwritten. The `ActionLog` also keeps RingBuffers for the actions of each frame you want to log which will also overwrite the oldest entry once the actions' RingBuffer is full. For better understanding see image below:
+
+
 ![Overview](https://raw.githubusercontent.com/k77torpedo/ActionLog/master/Documentation/ActionLog_Overview.png)
 
 
@@ -24,9 +26,9 @@ The `ActionLog` keeps a RingBuffer for the frames you want to add. Once the Ring
         ActionLogInt actionLog = new ActionLogInt(frameCapacity, actionCapacity, actionBufferCapacity);
 ```
 Explanation: 
-* With a _frameCapacity_ of 10 we can keep track of up to 10 frames before the oldest one will be recycled. 
+* With a _frameCapacity_ of 10 we can keep track of up to 10 frames before the oldest one will be overwritten. 
 * With an _actionCapacity_ of 5 we can log 5 different actions or events for every frame. 
-* With an _actionBufferCapacity_ of 10 we can make 10 entries for each(!!!) action before the oldest on will be recycled.
+* With an _actionBufferCapacity_ of 10 we can make 10 entries for each(!!!) action before the oldest on will be overwritten.
 
 Note: The _actionCapacity_ also dictates the _actionIds_ for the actions you want to add. An _actionCapacity_ of 7 will give you the _actionIds_ 0, 1, 2, 3, 4, 5 and 6. An _actionCapacity_ of 4 will give you the _actionIds_ 0, 1, 2 and 3.
 
@@ -48,7 +50,7 @@ This will add a new frame to the ActionLog.
 This will add the action to the current frame.
 
 
-### 4.4) Add an action retrospectively to a previous frame
+### 4.4) Add an action to a previous frame
 ```
         ulong firstFrame = 9998L;
         actionLog.AddFrame(firstFrame);
@@ -72,7 +74,7 @@ This will add the action to the specified frame.
 ```
 If the specified frame is the current frame the action will be added to it, else a new frame with the action will automatically be added.
 
-This is the preferred way of adding actions to the `ActionLogFloat`!
+This is the preferred way of adding actions to the `ActionLog`!
 
 
 ### 4.6) Read logged actions (Method 1)
@@ -90,7 +92,7 @@ This is the preferred way of adding actions to the `ActionLogFloat`!
 By receiving a shallow copy of the `RingBufferInt` we can simply iterate through its collection to receive all actions that have been added.
 
 
-#### 4.7) Read logged actions (Method 2)
+### 4.7) Read logged actions (Method 2)
 ```
         int actionId = 2:
         actionLog.AddAction(actionId, 22);
