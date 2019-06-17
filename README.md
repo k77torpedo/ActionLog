@@ -68,7 +68,7 @@ This will add the action to the specified frame.
 ```
 If the specified frame is the current frame the action will be added to it, else a new frame with the action will automatically be added.
 
-This is the preferred way of adding to the `ActionLogFloat`.
+This is the preferred way of adding actions to the `ActionLogFloat`!
 
 
 ### 3.6) Read logged actions (Method 1)
