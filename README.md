@@ -29,7 +29,7 @@ ActionLogInt actionLog = new ActionLogInt(frameCapacity, actionCapacity, actionB
 Explanation: 
 * With a _frameCapacity_ of 7 we can keep track of up to 7 frames before the oldest one will be overwritten. 
 * With an _actionCapacity_ of 4 we can log 4 different actions or events for every frame. 
-* With an _actionBufferCapacity_ of 5 we can make 5 entries for each(!!!) action before the oldest on will be overwritten.
+* With an _actionBufferCapacity_ of 5 we can make 5 entries for each(!!!) action before the oldest one will be overwritten.
 
 Note: The _actionCapacity_ also dictates the _actionIds_ for the actions you want to add. An _actionCapacity_ of 7 will give you the _actionIds_ 0, 1, 2, 3, 4, 5 and 6. An _actionCapacity_ of 4 will give you the _actionIds_ 0, 1, 2 and 3.
 
