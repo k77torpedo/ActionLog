@@ -78,7 +78,7 @@ If the specified frame is the current frame the action will be added to it, else
 This is the easiest and preferred way of adding actions to the `ActionLog`!
 
 
-### 4.6) Read logged actions (Method 1)
+### 4.6) Read/Retrieve logged actions
 ```
 int actionId = 2:
 actionLog.AddAction(actionId, 22);
@@ -90,22 +90,9 @@ for (int i = 0; i < buffer.Count; i++) {
     Debug.Log("Recorded action data: " + buffer[i]);
 }
 ```
-By receiving a shallow copy of the `RingBufferInt` we can simply iterate through its collection to receive all actions that have been added.
+By receiving a shallow copy of the `RingBufferInt` we can simply iterate through its collection to receive all actions that have been added. Note that the `RingBufferInt` that is returned should only be used for read-only-operations.
 
-
-### 4.7) Read logged actions (Method 2)
-```
-int actionId = 2:
-actionLog.AddAction(actionId, 22);
-actionLog.AddAction(actionId, 44);
-actionLog.AddAction(actionId, 66);
-
-int[] index = actionLog.GetActionsIndex(actionId);
-for (int i = 0; i < actionLog.Actions[index[0], index[1]].Count; i++) {
-    Debug.Log("Recorded action data: " + actionLog.Actions[index[0], index[1]][i]);
-}
-```
-By receiving the multidimensional index of where the `RingBufferInt` is located inside the `ActionLogInt.Actions` we can directly access it and do not need to produce any shallow copies of it.
+When reading from a _RingBuffer_ the index "0" is always the last item added ("1" would be the second latest item added and so forth).
 
 
 ## 5) Closure
