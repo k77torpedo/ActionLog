@@ -94,53 +94,6 @@
         }
 
         /// <summary>
-        /// Gets the multidimensional index of the specified actionId from the current frame.
-        /// The multidimensional index can be used on <see cref="Actions"/> to retrieve the action-data.
-        /// </summary>
-        /// <param name="pActionId">The id of the action.</param>
-        /// <returns>The multidimensional index with a length of 2.</returns>
-        public int[] GetActionsIndex (int pActionId) {
-            return new int[] { _frames.Head, pActionId };
-        }
-
-        /// <summary>
-        /// Gets the multidimensional index of the specified actionId from the specified frame.
-        /// The multidimensional index can be used on <see cref="Actions"/> to retrieve the action-data.
-        /// </summary>
-        /// <param name="pFrame">The frame.</param>
-        /// <param name="pActionId">The id of the action.</param>
-        /// <returns>The multidimensional index with a length of 2 if the frame was found, otherwise null.</returns>
-        public int[] GetActionsIndex (ulong pFrame, int pActionId) {
-            for (int i = 0; i < _frames.Count; i++) {
-                if (_frames[i] == pFrame) {
-                    return new int[] { _frames.TranslateIndex(i), pActionId };
-                }
-            }
-
-            return default;
-        }
-
-        /// <summary>
-        /// Tries to get the multidimensional index of the specified actionId from the specified frame.
-        /// The multidimensional index can be used on <see cref="Actions"/> to retrieve the action-data.
-        /// </summary>
-        /// <param name="pFrame">The frame.</param>
-        /// <param name="pActionId">The id of the action.</param>
-        /// <param name="pActionBufferIndex">The multidimensional index.</param>
-        /// <returns>True if the frame was found, otherwise false. </returns>
-        public bool TryGetActionsIndex (ulong pFrame, int pActionId, out int[] pActionBufferIndex) {
-            for (int i = 0; i < _frames.Count; i++) {
-                if (_frames[i] == pFrame) {
-                    pActionBufferIndex = new int[] { _frames.TranslateIndex(i), pActionId };
-                    return true;
-                }
-            }
-        
-            pActionBufferIndex = default;
-            return false;
-        }
-
-        /// <summary>
         /// Gets a shallow copy of the buffer for the specified actionId of the current frame. Intended for read-only operations.
         /// </summary>
         /// <param name="pActionId">The id of the action.</param>
